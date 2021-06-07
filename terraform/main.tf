@@ -14,8 +14,17 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "resource_group" {
-  name = "${var.project}-${var.environment}-resource-group"
+  name = "${var.project}-${var.environment}-register"
   location = var.location
+}
+
+resource "azurerm_api_management" "api_management" {
+    name                = "test-api-will"
+    location            = "${azurerm_resource_group.resource_group.location}"
+    resource_group_name = "${azurerm_resource_group.resource_group.name}"
+    publisher_name      = "William Cezar Penna de Oliveira"
+    publisher_email     = "williamcezart@gmail.com"
+    sku_name            = "Developer_1"
 }
 
 resource "azurerm_storage_account" "storage_account" {
