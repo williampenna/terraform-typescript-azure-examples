@@ -18,15 +18,6 @@ resource "azurerm_resource_group" "resource_group" {
   location = var.location
 }
 
-resource "azurerm_api_management" "api_management" {
-  name                = "test-api-will"
-  location            = azurerm_resource_group.resource_group.location
-  resource_group_name = azurerm_resource_group.resource_group.name
-  publisher_name      = "William Cezar Penna de Oliveira"
-  publisher_email     = "williamcezart@gmail.com"
-  sku_name            = "Developer_1"
-}
-
 resource "azurerm_storage_account" "storage_account" {
   name                     = "${var.project}${var.environment}storage"
   resource_group_name      = azurerm_resource_group.resource_group.name
@@ -78,42 +69,4 @@ resource "azurerm_function_app" "function_app" {
       app_settings["WEBSITE_RUN_FROM_PACKAGE"],
     ]
   }
-}
-
-resource "azurerm_api_management_backend" "apim_backend" {
-  name                = "example-backend"
-  resource_group_name = azurerm_resource_group.resource_group.name
-  api_management_name = azurerm_api_management_api.api_management_api.name
-  protocol            = "http"
-  url                 = "https://${azurerm_function_app.function_app.name}.azurewebsites.net/api/"
-}
-
-resource "azurerm_api_management_api" "api_management_api" {
-  name                = "example-api"
-  resource_group_name = azurerm_resource_group.resource_group.name
-  api_management_name = "example-api"
-  revision            = "1"
-  display_name        = "Example API"
-  path                = "test"
-  protocols           = ["https"]
-
-  import {
-    content_format = "openapi"
-    content_value  = file("openApi.yml")
-  }
-}
-
-resource "azurerm_api_management_api_policy" "example" {
-  api_name            = azurerm_api_management_api.api_management_api.name
-  api_management_name = azurerm_api_management_api.api_management_api.api_management_name
-  resource_group_name = azurerm_api_management_api.api_management_api.resource_group_name
-
-  xml_content = <<XML
-    <policies>
-      <inbound>
-        <base/>
-        <set-backend-service backend-id="example-backend" />
-      </inbound>
-    </policies>
-    XML
 }
