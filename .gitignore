@@ -24,6 +24,8 @@ local.settings.json
 
 node_modules
 dist
+build
+temp_infra
 
 # Local python packages
 .python_packages/
@@ -78,3 +80,8 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# ESLint
+.eslintcache
+package-lock.json
+.nyc_output
