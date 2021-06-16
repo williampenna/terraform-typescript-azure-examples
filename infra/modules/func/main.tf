@@ -57,3 +57,13 @@ resource "azurerm_function_app" "fa" {
     }
   }
 }
+
+module "apim" {
+  source                    = "../api_management"
+  LOCATION                  = var.LOCATION
+  RESOURCE_GROUP            = var.RESOURCE_GROUP
+  PROJECT                   = var.PROJECT
+  ENVIRONMENT               = var.ENVIRONMENT
+
+  depends_on = [azurerm_function_app.fa]
+}
