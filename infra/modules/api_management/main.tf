@@ -5,7 +5,7 @@ variable "RESOURCE_GROUP" {}
 
 
 resource "azurerm_api_management" "apim" {
-  name                = "${var.PROJECT}-${var.ENVIRONMENT}-api-mngmnt"
+  name                = "${var.PROJECT}-${var.ENVIRONMENT}-apim"
   location            = var.LOCATION
   resource_group_name = var.RESOURCE_GROUP
   publisher_name      = "William Penna"

@@ -32,8 +32,8 @@ resource "azurerm_storage_container" "sc" {
 }
 
 
-module "func" {
-  source                    = "./modules/func"
+module "ad" {
+  source                    = "./modules/active_directory"
   LOCATION                  = var.LOCATION
   RESOURCE_GROUP            = var.RESOURCE_GROUP
   PROJECT                   = var.PROJECT
@@ -43,16 +43,4 @@ module "func" {
   STORAGE_CONNECTION_STRING = azurerm_storage_account.sa.primary_blob_connection_string
 
   depends_on = [azurerm_resource_group.rg]
-}
-
-resource "local_file" "output" {
-  content = jsonencode({
-    "app_functions" : {
-      "name" : module.func.function_app_name,
-      "id" : module.func.function_app_id,
-      "hostname" : module.func.function_app_default_hostname,
-      "storage_account" : replace(module.func.function_app_storage_connection, "/", "\\/"),
-    }
-  })
-  filename = "../temp_infra/func.json"
 }

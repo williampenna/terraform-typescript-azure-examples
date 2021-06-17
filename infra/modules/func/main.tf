@@ -6,6 +6,8 @@ variable "RESOURCE_GROUP" {}
 variable "STORAGE_ACC_NAME" {}
 variable "STORAGE_ACC_KEY" {}
 variable "STORAGE_CONNECTION_STRING" {}
+variable "AD_CLIENT_ID" {}
+variable "TENANT_ID" {}
 
 resource "azurerm_application_insights" "ai" {
   name                = "${var.PROJECT}-${var.ENVIRONMENT}-ai"
@@ -48,6 +50,16 @@ resource "azurerm_function_app" "fa" {
     ignore_changes = [
       app_settings["WEBSITE_RUN_FROM_PACKAGE"]
     ]
+  }
+
+  auth_settings {
+    enabled = true
+    issuer = "https://login.microsoftonline.com/${var.TENANT_ID}"
+    active_directory {
+      client_id = var.AD_CLIENT_ID
+    }
+    default_provider = "AzureActiveDirectory"
+    unauthenticated_client_action = "RedirectToLoginPage"
   }
 
   # FIXME: Use DNS names instead of enabling CORS
