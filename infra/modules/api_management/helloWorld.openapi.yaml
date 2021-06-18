@@ -3,7 +3,7 @@ info:
   title: APIM Function App Hello World
   version: '1.0'
 servers:
-  - url: https://testwill-dev-api-mngmnt-apim.azure-api.net/api/hello_world
+  - url: https://testwill-dev-api-mngmnt-apim.azure-api.net/api
 paths:
   /helloWorld:
     get:

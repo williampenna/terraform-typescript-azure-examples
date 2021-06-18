@@ -2,7 +2,7 @@ variable "PROJECT" {}
 variable "ENVIRONMENT" {}
 variable "LOCATION" {}
 variable "RESOURCE_GROUP" {}
-
+variable "AD_CLIENT_ID" {}
 
 resource "azurerm_api_management" "apim" {
   name                = "${var.PROJECT}-${var.ENVIRONMENT}-apim"
@@ -12,6 +12,10 @@ resource "azurerm_api_management" "apim" {
   publisher_email     = "williamcezart@gmail.com"
 
   sku_name = "Developer_1"
+
+  identity {
+    type = "SystemAssigned"
+  }
 }
 
 resource "azurerm_api_management_api" "apimapi" {
@@ -28,4 +32,19 @@ resource "azurerm_api_management_api" "apimapi" {
     content_format = "openapi"
     content_value  = file("${path.module}/helloWorld.openapi.yaml")
   }
+}
+
+resource "azurerm_api_management_api_policy" "api_management_api_policy_api_public" {
+  api_name            = azurerm_api_management_api.apimapi.name
+  api_management_name = azurerm_api_management.apim.name
+  resource_group_name = var.RESOURCE_GROUP
+
+  xml_content = <<XML
+  <policies>
+    <inbound>
+      <base />
+      <authentication-managed-identity resource="${var.AD_CLIENT_ID}" ignore-error="false" />
+    </inbound>
+  </policies>
+  XML
 }

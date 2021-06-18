@@ -76,6 +76,7 @@ module "apim" {
   RESOURCE_GROUP            = var.RESOURCE_GROUP
   PROJECT                   = var.PROJECT
   ENVIRONMENT               = var.ENVIRONMENT
+  AD_CLIENT_ID              = var.AD_CLIENT_ID
 
   depends_on = [azurerm_function_app.fa]
 }
