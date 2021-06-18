@@ -43,7 +43,12 @@ resource "azurerm_api_management_api_policy" "api_management_api_policy_api_publ
   <policies>
     <inbound>
       <base />
-      <authentication-managed-identity resource="${var.AD_CLIENT_ID}" ignore-error="false" />
+      <validate-jwt header-name="Authorization" failed-validation-httpcode="401" failed-validation-error-message="Unauthorized" output-token-variable-name="jwt">
+        <openid-config url="https://login.microsoftonline.com/32ee6012-8cb2-4656-81f4-cff925e11f57/v2.0/.well-known/openid-configuration" />
+          <audiences>
+            <audience>0b84a125-9e3d-45a2-847d-7812b0ae19e8</audience>
+          </audiences>
+      </validate-jwt>
     </inbound>
   </policies>
   XML
